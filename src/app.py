@@ -27,30 +27,48 @@ def sitemap():
 
 @app.route('/members', methods=['GET'])
 def handle_hello():
-
+    try:
     # this is how you can use the Family datastructure by calling its methods
-    members = jackson_family.get_all_members()
-   
-    return jsonify(members), 200
+        members = jackson_family.get_all_members()        
+        if members == []:
+            return jsonify({"msg":"No members found"}),404
+        else : return jsonify(members), 200
+    
+    except Exception as err:
+        return jsonify({"error":"Internal Server Error","message":str(err)}),500
+
+
 
 @app.route('/member/<int:id>', methods=['GET'])
 def get_member(id):
-    member = jackson_family.get_member(id)
-    return jsonify(member)
+    try:
+        member = jackson_family.get_member(id)
+        if member is None:
+            return  jsonify({"msg":"No member found"}),404
+        else : return jsonify(member),200        
 
+    except Exception as err:
+        return jsonify({"error":"Internal Server Error","message":str(err)}),500
 @app.route('/member', methods=['POST'])
 def new_member():
-    body = request.get_json(force=True)
-    jackson_family.add_member(body)
-    return jsonify(body)
-
+    try:
+        body = request.get_json(force=True)        
+        jackson_family.add_member(body)
+        return jsonify(body)
+    except Exception as err:
+        return jsonify({"error":"Internal Server Error", "message":str(err)}),500
 
 @app.route('/member/<int:member_id>', methods=['DELETE'])
 def delete_member(member_id):
-    jackson_family.delete_member(member_id)
-    body_response = {"done":True}
-    return jsonify(body_response)
-
+    try:
+        member = jackson_family.get_member(member_id)
+        if member is None:
+            return jsonify({"msg":"Member not found, nothing to delete"}),404
+        else: 
+            jackson_family.delete_member(member_id)
+            return jsonify({"done":"true"})
+    except Exception as err:
+        return jsonify({"eroor":"Internal Server Error","message":str(err)}),500
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
