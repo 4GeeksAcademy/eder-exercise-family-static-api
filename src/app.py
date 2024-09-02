@@ -41,7 +41,7 @@ def handle_hello():
 
 @app.route('/member/<int:id>', methods=['GET'])
 def get_member(id):
-    try:
+    try:        
         member = jackson_family.get_member(id)
         if member is None:
             return  jsonify({"msg":"No member found"}),404
@@ -51,8 +51,11 @@ def get_member(id):
         return jsonify({"error":"Internal Server Error","message":str(err)}),500
 @app.route('/member', methods=['POST'])
 def new_member():
+    
     try:
-        body = request.get_json(force=True)        
+        body = request.get_json(force=True)
+        new_id = jackson_family._generate_id()
+        body["id"] = new_id        
         jackson_family.add_member(body)
         return jsonify(body)
     except Exception as err:

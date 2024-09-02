@@ -10,7 +10,7 @@ from random import randint
 
 class FamilyStructure:
     def __init__(self,last_name):
-        self._next_id = 1      
+        self._next_id = 4      
         self.last_name = last_name   
         
 
@@ -38,23 +38,20 @@ class FamilyStructure:
         self._next_id += 1
         return generated_id
 
-
-
     def add_member(self, member):        
-        self._members.append(member)
-        pass
+        self._members.append(member)        
+        
 
     def delete_member(self, id):
         delete_specific_member = next((sub for sub in self._members if sub['id'] == id), None)
-        self._members.remove(delete_specific_member)
-        # fill this method and update the return
-        pass
-
+        self._members.remove(delete_specific_member)        
+        
+       
     def get_member(self, id):
         specific_member = next((sub for sub in self._members if sub['id'] == id), None)
         return specific_member
         # fill this method and update the return
-        pass
+        
 
     # this method is done, it returns a list with all the family members
     def get_all_members(self):
